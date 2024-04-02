@@ -1,3 +1,7 @@
+/*
+    REFER TO THIS LINK FOR EXPLAINATION
+        https://www.notion.so/e05f3660266343c4b140814d0467d36b?pvs=4
+*/
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
