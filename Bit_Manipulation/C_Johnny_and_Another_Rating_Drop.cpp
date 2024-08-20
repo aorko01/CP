@@ -1,50 +1,58 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <set>
 using namespace std;
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<ll> vl;
-typedef pair<int,int> pi;
-typedef pair<ll,ll> pl;
-#define F first
-#define S second
-#define PB push_back
-#define MP make_pair
-#define REP(i,a,b) for(int i=a;i<b;i++)
-#define SQ(a) (a)*(a)
-vl setBits(ll n)
-{
-    vl a;
-    for(int i=0;i<60;i++)
-    {
-        if(n&(1LL<<i))
-        {
-            a.PB(i);
+
+bool canObtainSum(int n, int m, set<int>& usedPowers) {
+    // Special case when m = 1
+    if (m == 1) {
+        if (n == 1 && usedPowers.find(1) == usedPowers.end()) {
+            usedPowers.insert(1);
+            return true;
         }
+        return false;
     }
-    return a;
+
+    // Start with the largest power of m less than or equal to n
+    long long power = 1;
+    while (power <= n) {
+        power *= m;
+    }
+
+    // Go back to the highest power less than or equal to n
+    power /= m;
+
+    // Subtract powers of m from n
+    while (n > 0 && power > 0) {
+        if (n >= power) {
+            if (usedPowers.find(power) != usedPowers.end()) {
+                return false; // Power already used
+            }
+            n -= power;
+            usedPowers.insert(power); // Add this power to the set
+        }
+        power /= m;
+    }
+
+    // If n is reduced to 0, it means we can express it as the sum of distinct powers of m
+    return n == 0;
 }
-int main()
-{
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    vl a(60);
-    a[0]=1;
-    REP(i,1,60)
-    {
-        a[i]=2*a[i-1]+1;
+
+int main() {
+    int n = 31;
+    int m = 3;
+    set<int> usedPowers;
+
+    
+    if(canObtainSum(3,m,usedPowers)){
+        cout << "Yes, " << 3 << " can be obtained by summing distinct powers of " << m << "." << endl;
+    } else {
+        cout << "No, " << 3 << " cannot be obtained by summing distinct powers of " << m << "." << endl;
     }
-    int t;
-    cin>>t;
-    while(t--)
-    {
-        ll n;
-        cin>>n;
-        vl b=setBits(n);
-        ll ans=0;
-        for(int i=0;i<b.size();i++)
-        {
-            ans+=a[b[i]];
-        }
-        cout<<ans<<"\n";
+    if (canObtainSum(n, m, usedPowers)) {
+        cout << "Yes, " << n << " can be obtained by summing distinct powers of " << m << "." << endl;
+    } else {
+        cout << "No, " << n << " cannot be obtained by summing distinct powers of " << m << "." << endl;
     }
+
+    return 0;
 }
