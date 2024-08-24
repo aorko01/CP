@@ -1,70 +1,43 @@
-#include<bits/stdc++.h>
-using namespace std;
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<ll> vl;
-typedef pair<int,int> pi;
-typedef pair<ll,ll> pl;
-#define F first
-#define S second
-#define PB push_back
-#define MP make_pair
-#define REP(i,a,b) for(int i=a;i<b;i++)
-#define SQ(a) (a)*(a)
+#include <iostream>
+#include <vector>
 
-int main()
-{
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    int t;
-    cin>>t;
-    while(t--)
-    {
-        ll n,x,y;
-        cin>>n>>x>>y;
-        ll m=0;
-        REP(i,0,n)
-        {
-            ll a;
-            cin>>a;
-            m^=a;
+#define MOD 1000000007
+
+using namespace std;
+
+int main() {
+    int n, k;
+    cin >> n >> k;
+
+    vector<long long> count(n + 1, 0);
+    vector<long long> result(n + 1, 1); // Initially, all counts are 1 (for sequences of length 1)
+
+    // For each sequence length from 2 to k, update counts
+    for (int len = 2; len <= k; ++len) {
+        for (int i = 1; i <= n; ++i) {
+            count[i] = 0;
         }
-        ll u=(m&1);
-        if(u)
-        {
-            if(y%2==0)
-            {
-                if(x%2==1)
-                cout<<"Alice"<<endl;
-                else
-                cout<<"Bob"<<endl;
-            }
-            else
-            {
-                if(x%2==1)
-                cout<<"Bob"<<endl;
-                else
-                cout<<"Alice"<<endl;
+
+        // Calculate count[i] based on result[x] where x is a divisor of i
+        for (int i = 1; i <= n; ++i) {
+            for (int j = i; j <= n; j += i) {
+                count[j] = (count[j] + result[i]) % MOD;
             }
         }
-        else
-        {
-            if(y%2==0)
-            {
-                if(x%2==1)
-                cout<<"Bob"<<endl;
-                else
-                cout<<"Alice"<<endl;
-            }
-            else
-            {
-                if(x%2==1)
-                cout<<"Alice"<<endl;
-                else
-                cout<<"Bob"<<endl;
-            }
-           
+
+        // Update result for the next iteration
+        for (int i = 1; i <= n; ++i) {
+            result[i] = count[i];
         }
-            
     }
+
+    // Sum up all sequences of length k
+    long long total = 0;
+    for (int i = 1; i <= n; ++i) {
+        total = (total + result[i]) % MOD;
+    }
+
+    cout << total << endl;
+
+    return 0;
 }
